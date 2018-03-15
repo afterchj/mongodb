@@ -2,6 +2,7 @@ package com.mystudy.demo;
 
 import java.util.List;
 
+
 import com.mystudy.util.MongoDb;
 import org.bson.Document;
 
@@ -15,13 +16,13 @@ public class MongoTest
 {
     @Before
     public void before(){
-        MongoDb.connect("test", "mytest", "mongodb01.demo.tpadsz.cn", 27017);
+        MongoDb.connect("test", "mytest", "10.10.11.130", 27017);
     }
 
     @Test
     public void testInsert(){
         Document document = new Document();
-        document.append("name", "after").append("gender", "male");
+        document.append("_id", "10120").append("name", "after").append("gender", "male");
         MongoDb.insert(document);
         System.out.println("gender="+document.get("gender"));
     }
@@ -37,7 +38,7 @@ public class MongoTest
     @Test
     public void testFindBy(){
         Document filter = new Document();
-        filter.append("name", "wu");
+        filter.append("name", "lucy");
         List<Document> results = MongoDb.findBy(filter);
         for(Document doc : results){
             System.out.println(doc.toJson());
@@ -47,11 +48,11 @@ public class MongoTest
     @Test
     public void testUpdateOne(){
         Document filter = new Document();
-        filter.append("name", "lucy");
+        filter.append("_id", "10120");
 
         //注意update文档里要包含"$set"字段
         Document update = new Document();
-        update.append("$set", new Document("gender", "female"));
+        update.append("$set", new Document("gender", "female").append("name", "lucy"));
         UpdateResult result = MongoDb.updateOne(filter, update);
         System.out.println("matched count = " + result.getMatchedCount());
     }
